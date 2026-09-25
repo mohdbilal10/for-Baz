@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>For Bazilla 🌷</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;1,500&family=Nunito+Sans:wght@300;400;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    color-scheme: dark;
+    --night-1:#2a1a4e;
+    --night-2:#3d2470;
+    --night-3:#1a0f30;
+    --purple:#a678e8;
+    --violet:#8b5cf6;
+    --tulip:#e56b8c;
+    --tulip-soft:#f3a5c0;
+    --gold:#f3c969;
+    --cream:#f7efe8;
+    --muted:rgba(247,239,232,.62);
+    box-sizing: border-box;
+    padding-top: env(safe-area-inset-top, 0px);
+    padding-bottom: env(safe-area-inset-bottom, 0px);
+  }
+  *,*::before,*::after{ box-sizing: inherit; }
+  html,body{ height:100%; margin:0; }
+  body{
+    background:
+      radial-gradient(120% 80% at 50% -10%, #4a2d82 0%, var(--night-2) 30%, var(--night-1) 58%, var(--night-3) 100%);
+    color: var(--cream);
+    font-family:"Nunito Sans", system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
+    overflow-x: hidden;
+    -webkit-font-smoothing: antialiased;
+  }
+  #fx{ position:fixed; inset:0; width:100%; height:100%; z-index:0; pointer-events:none; }
+
+  .stage{
+    position:relative; z-index:1;
+    min-height:100%;
+    display:flex; align-items:center; justify-content:center;
+    padding: clamp(20px,6vw,48px);
+  }
+
+  /* ---- Gate ---- */
+  .gate{
+    position:fixed; inset:0; z-index:3;
+    display:flex; flex-direction:column; align-items:center; justify-content:center;
+    text-align:center; padding: clamp(24px,7vw,56px);
+    transition: opacity .9s ease;
+  }
+  .gate .eyebrow{
+    font-size:.78rem; letter-spacing:.32em; text-transform:uppercase;
+    color:var(--muted); margin-bottom:1.1rem;
+  }
+  .gate .for{
+    font-family:"Cormorant Garamond", serif; font-style:italic; font-weight:500;
+    font-size: clamp(2.6rem, 12vw, 4.4rem); line-height:1; color:var(--cream);
+    margin:0 0 2rem;
+  }
+  .gate .for span{ color:var(--purple); }
+  .tap{
+    display:inline-flex; align-items:center; gap:.6em;
+    font-size:.82rem; letter-spacing:.28em; text-transform:uppercase; color:var(--gold);
+    padding:.9em 1.6em; border:1px solid rgba(243,201,105,.4); border-radius:999px;
+    background:rgba(243,201,105,.06);
+    animation:breathe 2.6s ease-in-out infinite; cursor:pointer;
+  }
+  @keyframes breathe{ 0%,100%{ transform:translateY(0); opacity:.85 } 50%{ transform:translateY(-4px); opacity:1 } }
+  body.opened .gate{ opacity:0; pointer-events:none; }
+
+  /* ---- Scene ---- */
+  .scene{
+    max-width:560px; width:100%; text-align:center;
+    opacity:0; transition:opacity 1s ease .1s;
+  }
+  body.opened .scene{ opacity:1; }
+
+  .tulip{ width:clamp(66px,16vw,96px); height:auto; margin:0 auto .6rem; display:block;
+    transform:scale(.6); opacity:0; transition:transform 1.5s cubic-bezier(.2,.85,.2,1) .15s, opacity 1s ease .15s;
+    cursor:pointer; }
+  body.opened .tulip{ transform:scale(1); opacity:1; }
+  .petL,.petR{ transform-origin:50% 100%; transition:transform 1.6s cubic-bezier(.2,.85,.2,1) .3s; }
+  body.opened .petL{ transform:rotate(-13deg); }
+  body.opened .petR{ transform:rotate(13deg); }
+
+  .greeting{
+    font-family:"Cormorant Garamond", serif; font-weight:500;
+    font-size: clamp(1.1rem,4.5vw,1.5rem); color:var(--gold); text-transform:uppercase;
+    letter-spacing:.34em; margin:.4rem 0 .1rem;
+  }
+  .name{
+    font-family:"Cormorant Garamond", serif; font-weight:600; font-style:italic;
+    font-size: clamp(3rem, 15vw, 5.2rem); line-height:1; margin:.1rem 0 .8rem;
+    background:linear-gradient(180deg,#fff 0%, var(--purple) 55%, var(--tulip) 100%);
+    -webkit-background-clip:text; background-clip:text; color:transparent;
+  }
+  .age{
+    display:flex; align-items:center; justify-content:center; gap:.9rem;
+    color:var(--gold); font-size:.8rem; letter-spacing:.34em; text-transform:uppercase;
+    margin:0 0 1.6rem;
+  }
+  .age::before,.age::after{ content:""; height:1px; width:clamp(28px,10vw,58px);
+    background:linear-gradient(90deg,transparent,rgba(243,201,105,.7),transparent); }
+  .letter p{
+    font-size: clamp(1rem,3.6vw,1.12rem); line-height:1.85; font-weight:300;
+    color:var(--cream); margin:0 auto 1.05rem; max-width:44ch;
+  }
+  .letter p.soft{ color:var(--muted); }
+  .sign{
+    font-family:"Cormorant Garamond", serif; font-style:italic; font-size:clamp(1.3rem,5vw,1.7rem);
+    color:var(--tulip-soft); margin-top:1.6rem;
+  }
+  .foot{ margin-top:1.4rem; font-size:1.3rem; opacity:.9; }
+
+  /* staggered reveal */
+  .rise{ opacity:0; transform:translateY(16px); transition:opacity 1.1s ease, transform 1.1s ease; }
+  body.opened .rise{ opacity:1; transform:none; }
+  body.opened .d1{ transition-delay:.5s } body.opened .d2{ transition-delay:.8s }
+  body.opened .d3{ transition-delay:1.1s } body.opened .d4{ transition-delay:1.5s }
+  body.opened .d5{ transition-delay:1.9s } body.opened .d6{ transition-delay:2.3s }
+  body.opened .d7{ transition-delay:2.7s } body.opened .d8{ transition-delay:3.2s }
+
+  @media (prefers-reduced-motion: reduce){
+    .tap{ animation:none } .rise,.scene,.tulip,.petL,.petR{ transition-duration:.35s }
+  }
+</style>
+</head>
+<body>
+  <canvas id="fx"></canvas>
+
+  <div class="stage">
+    <div class="scene" id="scene">
+      <svg class="tulip" id="tulip" viewBox="0 0 120 150" aria-hidden="true">
+        <defs>
+          <linearGradient id="pg" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0" stop-color="#f7b7cd"/><stop offset="1" stop-color="#e56b8c"/>
+          </linearGradient>
+          <linearGradient id="lg" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0" stop-color="#5fae7a"/><stop offset="1" stop-color="#3c8158"/>
+          </linearGradient>
+        </defs>
+        <path d="M60 150 C60 110 60 92 60 74" stroke="url(#lg)" stroke-width="5" fill="none" stroke-linecap="round"/>
+        <path d="M60 120 C40 118 26 104 24 84 C46 84 58 98 60 118 Z" fill="url(#lg)" opacity=".9"/>
+        <path d="M60 128 C82 126 96 112 98 92 C74 92 62 106 60 126 Z" fill="url(#lg)" opacity=".8"/>
+        <g class="petL"><path d="M60 74 C40 74 28 56 30 36 C30 28 36 22 44 24 C52 26 58 40 60 74 Z" fill="url(#pg)"/></g>
+        <g class="petR"><path d="M60 74 C80 74 92 56 90 36 C90 28 84 22 76 24 C68 26 62 40 60 74 Z" fill="url(#pg)"/></g>
+        <path d="M60 74 C54 54 54 34 60 22 C66 34 66 54 60 74 Z" fill="#f18fb0"/>
+      </svg>
+
+      <div class="greeting rise d1">Happy Birthday</div>
+      <div class="name rise d2">Bazilla</div>
+      <div class="age rise d3">twenty&#8209;one today</div>
+
+      <div class="letter">
+        <p class="rise d4">It just turned your day — and I couldn't let it pass without being one of the first to say it.</p>
+        <p class="soft rise d5">We were only classmates, and we hardly spoke. But you were never someone I could simply overlook — through all the noise and all those years, somehow it was always you my eyes found.</p>
+        <p class="rise d6">Twenty-one looks like it was made for you. I hope this year is as lovely as tulips in full bloom — soft, bright, unhurried, and full of good things you never even thought to wish for.</p>
+        <p class="soft rise d7">Whatever else today holds, I hope it's gentle with you. You carry a quiet kind of light, Bazilla — and the world is a little warmer for it.</p>
+      </div>
+
+      <div class="sign rise d8">— Mohammed</div>
+      <div class="foot rise d8">🌷</div>
+    </div>
+  </div>
+
+  <div class="gate" id="gate">
+    <div class="eyebrow">a little something, at midnight</div>
+    <h1 class="for">for <span>Bazilla</span></h1>
+    <button class="tap" id="tap">tap to open ✦</button>
+  </div>
+
+<script>
+(function(){
+  const canvas = document.getElementById('fx');
+  const ctx = canvas.getContext('2d');
+  const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  let W=0,H=0,dpr=Math.min(window.devicePixelRatio||1,2);
+  let stars=[], petals=[], opened=false;
+
+  function resize(){
+    W=canvas.clientWidth=window.innerWidth;
+    H=canvas.clientHeight=window.innerHeight;
+    canvas.width=W*dpr; canvas.height=H*dpr;
+    ctx.setTransform(dpr,0,0,dpr,0,0);
+    makeStars();
+  }
+  function makeStars(){
+    stars=[];
+    const n=Math.round(W*H/9000);
+    for(let i=0;i<n;i++){
+      stars.push({x:Math.random()*W,y:Math.random()*H,r:Math.random()*1.3+.3,
+        a:Math.random(),tw:Math.random()*0.02+0.004});
+    }
+  }
+  const COLORS=['#f3a5c0','#e56b8c','#a678e8','#8b5cf6','#c9a6f0','#f3c969','#7cc5f0'];
+  function makePetal(x,y,burst){
+    return {
+      x:x, y:y,
+      vx:(Math.random()-.5)*(burst?4:0.6),
+      vy:burst?(-Math.random()*4-1):(Math.random()*0.8+0.4),
+      g:0.03,
+      size:Math.random()*7+6,
+      rot:Math.random()*Math.PI*2,
+      vr:(Math.random()-.5)*0.06,
+      sway:Math.random()*Math.PI*2,
+      swayS:Math.random()*0.03+0.01,
+      color:COLORS[(Math.random()*COLORS.length)|0],
+      alpha:Math.random()*0.35+0.65
+    };
+  }
+  function drawPetal(p){
+    ctx.save();
+    ctx.translate(p.x,p.y); ctx.rotate(p.rot); ctx.globalAlpha=p.alpha;
+    ctx.fillStyle=p.color;
+    const s=p.size;
+    ctx.beginPath();
+    ctx.moveTo(0,-s);
+    ctx.quadraticCurveTo(s*0.8,-s*0.2, 0, s);
+    ctx.quadraticCurveTo(-s*0.8,-s*0.2, 0,-s);
+    ctx.fill();
+    ctx.restore();
+  }
+
+  function tick(){
+    ctx.clearRect(0,0,W,H);
+    for(const s of stars){
+      s.a+=s.tw; const a=0.35+Math.abs(Math.sin(s.a))*0.6;
+      ctx.globalAlpha=a; ctx.fillStyle='#fff';
+      ctx.beginPath(); ctx.arc(s.x,s.y,s.r,0,Math.PI*2); ctx.fill();
+    }
+    ctx.globalAlpha=1;
+    if(opened && !reduce){
+      if(petals.length<70 && Math.random()<0.5) petals.push(makePetal(Math.random()*W,-20,false));
+      for(let i=petals.length-1;i>=0;i--){
+        const p=petals[i];
+        p.vy+=p.g; p.sway+=p.swayS;
+        p.x+=p.vx+Math.sin(p.sway)*0.8; p.y+=p.vy; p.rot+=p.vr;
+        drawPetal(p);
+        if(p.y>H+30) petals.splice(i,1);
+      }
+    }
+    requestAnimationFrame(tick);
+  }
+
+  function burst(cx,cy,n){
+    if(reduce) return;
+    for(let i=0;i<n;i++) petals.push(makePetal(cx,cy,true));
+  }
+  function open(){
+    if(opened) return; opened=true;
+    document.body.classList.add('opened');
+    burst(W/2,H*0.42,48);
+  }
+
+  window.addEventListener('resize',resize);
+  resize(); requestAnimationFrame(tick);
+  const gate=document.getElementById('gate');
+  document.getElementById('tap').addEventListener('click',open);
+  gate.addEventListener('click',open);
+  // hidden surprise: tap the tulip for a little extra shower
+  const tulip=document.getElementById('tulip');
+  tulip.addEventListener('click',function(e){
+    if(!opened) return;
+    e.stopPropagation();
+    const r=tulip.getBoundingClientRect();
+    burst(r.left+r.width/2, r.top+r.height/2, 26);
+  });
+})();
+</script>
+</body>
+</html>
