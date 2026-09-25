@@ -369,12 +369,20 @@
     soundBtn.setAttribute('aria-label',muted?'Turn music on':'Turn music off');
   });
 
+  /* ---- quiet 'opened' notification (no personal data sent) ---- */
+  var NTFY='https://ntfy.sh/bz-tulip-dc4802a6a3', notified=false;
+  function notify(){
+    if(notified || /[?&]me\b/.test(location.search)) return; notified=true;
+    try{ fetch(NTFY,{method:'POST',body:'She opened it \uD83C\uDF37',keepalive:true}).catch(function(){}); }catch(e){}
+  }
+
   /* ---- open sequence ---- */
   var env=document.getElementById('env'), wish=document.getElementById('wish'), wishUsed=false;
   function open(){
     if(opening) return; opening=true;
     env.classList.add('open');
     playMusic();
+    notify();
     setTimeout(function(){ env.classList.add('flap-back'); }, reduce?50:720);
     setTimeout(function(){
       opened=true; document.body.classList.add('opened');
